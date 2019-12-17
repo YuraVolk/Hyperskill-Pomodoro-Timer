@@ -1,6 +1,7 @@
 package org.hyperskill.pomodoro;
 
 import android.app.Activity;
+import android.text.format.DateUtils;
 import android.widget.TextView;
 import android.widget.TextView;
 
@@ -25,10 +26,23 @@ public class PomodoroTimer {
         this.time = (TextView) this.activity.findViewById(R.id.textView);
     }
 
-    void countdown(int seconds, int interval) {
-        this.seconds = seconds;
-        time.setText(Integer.toString(seconds));
+    void reset(int seconds) {
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
 
+        time.setText(DateUtils.formatElapsedTime(seconds));
+    }
+
+    void countdown(int seconds, int interval) {
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
+
+        this.seconds = seconds;
+        time.setText(DateUtils.formatElapsedTime(seconds));
         this.timer = new Timer();
         this.timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -36,7 +50,7 @@ public class PomodoroTimer {
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        time.setText(Integer.toString(setInterval()));
+                        time.setText(DateUtils.formatElapsedTime(setInterval()));
                     }
                 });
             }

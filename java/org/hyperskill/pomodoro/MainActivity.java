@@ -2,6 +2,7 @@ package org.hyperskill.pomodoro;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import java.util.Timer;
 
 public class MainActivity extends AppCompatActivity {
     private PomodoroTimer timer;
+    private final int currentSeconds = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,14 +23,15 @@ public class MainActivity extends AppCompatActivity {
         final TextView time =  findViewById(R.id.textView);
         timer = new PomodoroTimer(this);
 
-        System.out.println("yay");
+        timer.reset(currentSeconds);
+
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        timer.countdown(3, 1000);
+                        timer.countdown(currentSeconds, 1000);
                     }
                 });
             }
@@ -40,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        time.setText("stop");
+                        timer.reset(currentSeconds);
                     }
                 });
             }
