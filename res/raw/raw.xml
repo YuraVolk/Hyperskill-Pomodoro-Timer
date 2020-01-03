@@ -32,14 +32,13 @@
             android:layout_weight="1"
             android:text="Controls" />
     </LinearLayout>
-    <org.hyperskill.pomodoro.timerView android:id="@+id/custView"
+    <org.hyperskill.pomodoro.TimerView android:id="@+id/timer"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_margin="5dp"
         custom:circleColor="#ff0099"
         custom:circleLabel="Hello"
         custom:labelColor="#ffff66">
-
-    </org.hyperskill.pomodoro.timerView>
+    </org.hyperskill.pomodoro.TimerView>
 </android.support.constraint.ConstraintLayout>
 

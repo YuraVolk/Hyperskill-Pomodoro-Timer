@@ -23,7 +23,7 @@ public class PomodoroTimer {
 
     public PomodoroTimer(Activity _activity) {
         this.activity = _activity;
-        this.time = (TextView) this.activity.findViewById(R.id.textView);
+        //this.time = (TextView) this.activity.findViewById(R.id.textView);
     }
 
     void reset(int seconds) {
@@ -32,7 +32,7 @@ public class PomodoroTimer {
             timer.purge();
         }
 
-        time.setText(DateUtils.formatElapsedTime(seconds));
+        //time.setText(DateUtils.formatElapsedTime(seconds));
     }
 
     void countdown(int seconds, int interval) {
