@@ -184,7 +184,6 @@ public class TimerView extends View {
 
 
     private void continueAnimation(int secs) {
-
         if (n == 0) {
             n = 4;
             stop(secs, true);
@@ -195,11 +194,11 @@ public class TimerView extends View {
         stop(secs, false);
         if (n % 2 == 0) {
             setColor(Color.GREEN);
+            start(MainActivity.breakSeconds, false);
         } else {
+            start(MainActivity.workSeconds, false);
             setColor(Color.RED);
         }
-
-        start(secs, false);
     }
 
     public void stop(int secs, boolean fullStop) {
@@ -208,7 +207,7 @@ public class TimerView extends View {
 
         if (fullStop) {
             n = 0;
-            Log.d("tessssss", "FFFFFFFFFFFFFFF");
+
             if (mTimerAnimator != null && mTimerAnimator.isRunning()) {
                 mTimerAnimator.cancel();
                 this.clearAnimation();

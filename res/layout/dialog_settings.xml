@@ -22,7 +22,7 @@
       android:textSize="24sp" />
 
   <EditText
-      android:id="@+id/editText4"
+      android:id="@+id/restInput"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:ems="10"
@@ -38,7 +38,7 @@
       android:textSize="24sp" />
 
   <EditText
-      android:id="@+id/editText5"
+      android:id="@+id/workInput"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:ems="10"
