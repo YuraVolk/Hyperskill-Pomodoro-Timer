@@ -134,6 +134,14 @@ public class TimerView extends View {
         this.text = time;
     }
 
+    public int getColor() {
+        return mCirclePaint.getColor();
+    }
+
+    public String getText() {
+        return text;
+    }
+
     public void start(int secs, boolean isStart) {
         stop(secs, false);
 
