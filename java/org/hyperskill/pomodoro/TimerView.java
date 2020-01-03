@@ -13,24 +13,26 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
-import android.os.Looper;
+import android.media.RingtoneManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Handler;
 
 public class TimerView extends View {
+    private NotificationCompat.Builder notificationBuilder;
+    private NotificationManagerCompat notificationManagerCompat;
+    private int uniqueID = 0;
 
     private static final int ARC_START_ANGLE = 270;
     private PomodoroTimer timer;
     private int n = 5;
+
 
     private static final float THICKNESS_SCALE = 1.9f;
     private String text = "";
@@ -51,6 +53,13 @@ public class TimerView extends View {
 
     public void setActivty(Activity activity) {
         timer = new PomodoroTimer(activity);
+        notificationBuilder = new NotificationCompat.Builder(activity, "hyperskill_pomodoro");
+        notificationBuilder.setContentTitle("You need a rest!!!");
+        notificationBuilder.setContentText("It's time to stop");
+        notificationBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM));
+        notificationBuilder.setPriority(NotificationCompat.PRIORITY_MAX); //Test purposes only
+
+        notificationManagerCompat = NotificationManagerCompat.from(activity);
     }
 
     public TimerView(Context context) {
@@ -193,6 +202,8 @@ public class TimerView extends View {
 
         stop(secs, false);
         if (n % 2 == 0) {
+            uniqueID++;
+            notificationManagerCompat.notify(uniqueID, notificationBuilder.build());
             setColor(Color.GREEN);
             start(MainActivity.breakSeconds, false);
         } else {
