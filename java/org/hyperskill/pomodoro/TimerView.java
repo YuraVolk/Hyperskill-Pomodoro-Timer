@@ -1,5 +1,7 @@
 package org.hyperskill.pomodoro;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -11,18 +13,27 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.os.Looper;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Handler;
 
 public class TimerView extends View {
 
     private static final int ARC_START_ANGLE = 270;
     private PomodoroTimer timer;
+    private int n = 4;
 
     private static final float THICKNESS_SCALE = 1.9f;
+    private String text = "";
 
     private Bitmap mBitmap;
     private Canvas mCanvas;
@@ -80,6 +91,8 @@ public class TimerView extends View {
         mEraserPaint.setAntiAlias(true);
         mEraserPaint.setColor(Color.TRANSPARENT);
         mEraserPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+
+        this.text = DateUtils.formatElapsedTime(3);
     }
 
     @SuppressWarnings("SuspiciousNameCombination")
@@ -112,15 +125,20 @@ public class TimerView extends View {
             mCanvas.drawOval(mCircleInnerBounds, mEraserPaint);
         }
 
-        mCanvas.drawText("00:03", x, y, textPaint);
+        mCanvas.drawText(text, x, y, textPaint);
 
         canvas.drawBitmap(mBitmap, 0, 0, null);
     }
 
-    public void start(int secs) {
-        stop();
+    public void setTime(String time) {
+        this.text = time;
+    }
 
-        mTimerAnimator = ValueAnimator.ofFloat(0f, 1f);
+    public void start(int secs) {
+        stop(secs);
+
+        timer.countdown(secs, 1000);
+        mTimerAnimator = ValueAnimator.ofFloat(1f, 0f);
         mTimerAnimator.setDuration(TimeUnit.SECONDS.toMillis(secs));
         mTimerAnimator.setInterpolator(new LinearInterpolator());
         mTimerAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -129,15 +147,28 @@ public class TimerView extends View {
                 drawProgress((float) animation.getAnimatedValue());
             }
         });
+
+        mTimerAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation){
+                stop(secs);
+            }
+        });
+
         mTimerAnimator.start();
     }
 
-    public void stop() {
+    public void stop(int secs) {
+
+        timer.reset(secs);
+
+
         if (mTimerAnimator != null && mTimerAnimator.isRunning()) {
             mTimerAnimator.cancel();
             mTimerAnimator = null;
 
-            drawProgress(0f);
+            drawProgress(1f);
+            Log.e("DEBUG", timer.toString());
         }
     }
 

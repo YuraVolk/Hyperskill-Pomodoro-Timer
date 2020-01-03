@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         timerView = (TimerView) findViewById(R.id.timer);
+        timerView.setActivty(this);
         final Button startButton = findViewById(R.id.startButton);
         final Button resetButton = findViewById(R.id.resetButton);
       /*  final TextView time =  findViewById(R.id.textView);
