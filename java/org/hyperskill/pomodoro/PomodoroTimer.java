@@ -2,8 +2,7 @@ package org.hyperskill.pomodoro;
 
 import android.app.Activity;
 import android.text.format.DateUtils;
-import android.widget.TextView;
-import android.widget.TextView;
+
 
 import java.util.Timer;
 import java.util.TimerTask;

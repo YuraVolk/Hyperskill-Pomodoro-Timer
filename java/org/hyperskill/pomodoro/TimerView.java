@@ -30,7 +30,7 @@ public class TimerView extends View {
 
     private static final int ARC_START_ANGLE = 270;
     private PomodoroTimer timer;
-    private int n = 4;
+    private int n = 5;
 
     private static final float THICKNESS_SCALE = 1.9f;
     private String text = "";
@@ -45,9 +45,9 @@ public class TimerView extends View {
     private Paint mEraserPaint;
     private Paint textPaint;
 
-    private float mCircleSweepAngle;
+    private float mCircleSweepAngle = 360.0f;
 
-    private ValueAnimator mTimerAnimator;
+    private static ValueAnimator mTimerAnimator;
 
     public void setActivty(Activity activity) {
         timer = new PomodoroTimer(activity);
@@ -134,9 +134,14 @@ public class TimerView extends View {
         this.text = time;
     }
 
-    public void start(int secs) {
-        stop(secs);
+    public void start(int secs, boolean isStart) {
+        stop(secs, false);
 
+        if (isStart) {
+            n = 5;
+        }
+
+        timer.reset(secs);
         timer.countdown(secs, 1000);
         mTimerAnimator = ValueAnimator.ofFloat(1f, 0f);
         mTimerAnimator.setDuration(TimeUnit.SECONDS.toMillis(secs));
@@ -151,26 +156,75 @@ public class TimerView extends View {
         mTimerAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation){
-                stop(secs);
+                Log.d("tessssss", "FFFFFFFFFFFFFFF");
+                continueAnimation(secs);
             }
         });
 
         mTimerAnimator.start();
     }
 
-    public void stop(int secs) {
+    public void setColor(int color) {
+        mCirclePaint = new Paint();
+        mCirclePaint.setAntiAlias(true);
+        mCirclePaint.setColor(color);
+    }
 
+    public boolean isRunning() {
+        return mTimerAnimator != null && mTimerAnimator.isRunning();
+    }
+
+
+    private void continueAnimation(int secs) {
+
+        if (n == 0) {
+            n = 4;
+            stop(secs, true);
+            setColor(Color.YELLOW);
+            return;
+        }
+
+        stop(secs, false);
+        if (n % 2 == 0) {
+            setColor(Color.GREEN);
+        } else {
+            setColor(Color.RED);
+        }
+
+        start(secs, false);
+    }
+
+    public void stop(int secs, boolean fullStop) {
+     //   setColor(Color.YELLOW);
         timer.reset(secs);
 
+        if (fullStop) {
+            n = 0;
+            Log.d("tessssss", "FFFFFFFFFFFFFFF");
+            if (mTimerAnimator != null && mTimerAnimator.isRunning()) {
+                mTimerAnimator.cancel();
+                this.clearAnimation();
+                mTimerAnimator = null;
+                setColor(Color.YELLOW);
+                drawProgress(1f);
+            }
+
+            return;
+        }
 
         if (mTimerAnimator != null && mTimerAnimator.isRunning()) {
             mTimerAnimator.cancel();
+            this.clearAnimation();
             mTimerAnimator = null;
 
+            Log.d("timer-view-stop", "yay");
             drawProgress(1f);
-            Log.e("DEBUG", timer.toString());
+
+            n--;
         }
     }
+
+
 
     private void drawProgress(float progress) {
         mCircleSweepAngle = 360 * progress;
